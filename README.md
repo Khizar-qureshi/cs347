@@ -1,2 +1,2 @@
-# cs347
-Homework assignments for CS347
+# cs357
+Homework assignments for CS357
