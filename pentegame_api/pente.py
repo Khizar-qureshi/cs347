@@ -40,17 +40,15 @@ def is_capturable(board, row, col, char):
         return True
     return False
 
-
-
 '''Updates the amount of captures player X has from player O'''
 def updateX(board,row,col):
     nums = 0
     if is_capturable(board,row,col,'o'): 
-        if col < 18 and col > 1 and board[row][col+2] and board[row][col-2] == "x":
+        if col < 18 and col > 1 and board[row][col+2] == "x" and board[row][col-2] == "x":
             nums+=1
-        elif row < 18 and row > 1 and board[row+2][col] and board[row-2][col]== "x":
+        elif row < 18 and row > 1 and board[row+2][col] == "x" and board[row-2][col]== "x":
             nums+=1
-        elif row < 18 and col < 18 and row > 1 and col > 1 and board[row+2][col+2] and board[row-2][col-2]== "x":
+        elif row < 18 and col < 18 and row > 1 and col > 1 and board[row+2][col+2] =="x" and board[row-2][col-2]== "x":
             nums+=1
     return nums
         
@@ -58,11 +56,11 @@ def updateX(board,row,col):
 def updateO(board,row,col):
     nums = 0
     if is_capturable(board,row,col, 'x'): 
-        if col < 18 and col > 1 and board[row][col+2] and board[row][col-2] == "o":
+        if col < 18 and col > 1 and board[row][col+2] == "o" and board[row][col-2] == "o":
             nums+=1
-        elif row < 18 and row > 1 and board[row+2][col] and board[row-2][col] == "o":
+        elif row < 18 and row > 1 and board[row+2][col] =="o" and board[row-2][col] == "o":
             nums+=1
-        elif row < 18 and col < 18 and row > 1 and col > 1 and board[row+2][col+2] and board[row-2][col-2] == "o":
+        elif row < 18 and col < 18 and row > 1 and col > 1 and board[row+2][col+2] == "o" and board[row-2][col-2] == "o":
             nums+=1
     return nums
         
@@ -100,10 +98,10 @@ def new_move(gameID, row, col):
         raise Exception("This spot is already taken!")   
     elif player == 'X' or player == 'x':
         board[row][col] = 'o'  
-        capturedO = capturedO + updateO(board, row, col) #recalculate capturedO
+        #capturedO = capturedO + updateO(board, row, col) #recalculate capturedO
     else:
         board[row][col] = 'x'
-        capturedX = capturedX + updateX(board, row, col) #recalculate capturedX
+        #capturedX = capturedX + updateX(board, row, col) #recalculate capturedX
 
     # place player's spot 
     temp = False
@@ -115,11 +113,16 @@ def new_move(gameID, row, col):
                 temp = True
                 break
         if temp: break
-        
-    #recalculate captureX and captureY based on player's spot
-    capturedO = capturedO + updateO(board, myRow, myCol) 
-    capturedX = capturedX + updateX(board, myRow, myCol)
-    #get new string representation of board          
+
+    
+    #loop through the board and check if there are any new captures
+    for rowIndex, row in enumerate(board):
+        for colIndex, col in enumerate(row):
+            if col == 'x':
+                capturedO += updateO(board, rowIndex, colIndex)
+            elif col == 'o':
+                capturedX += updateX(board, rowIndex, colIndex)
+                        
     formatted_board = get_board(board)
     # create new game state
     new_game_state = 'player:' + player + '#' + 'board:' + formatted_board + '#' + 'capturedX:' + str(capturedX) + '#' + 'capturedO:' + str(capturedO)
