@@ -98,10 +98,8 @@ def new_move(gameID, row, col):
         raise Exception("This spot is already taken!")   
     elif player == 'X' or player == 'x':
         board[row][col] = 'o'  
-        #capturedO = capturedO + updateO(board, row, col) #recalculate capturedO
     else:
         board[row][col] = 'x'
-        #capturedX = capturedX + updateX(board, row, col) #recalculate capturedX
 
     # place player's spot 
     temp = False
@@ -116,12 +114,14 @@ def new_move(gameID, row, col):
 
     
     #loop through the board and check if there are any new captures
+    captureX = 0
+    captureY = 0
     for rowIndex, row in enumerate(board):
         for colIndex, col in enumerate(row):
-            if col == 'x':
-                capturedO += updateO(board, rowIndex, colIndex)
-            elif col == 'o':
+            if col == 'o':
                 capturedX += updateX(board, rowIndex, colIndex)
+            elif col == 'x':
+                capturedO += updateO(board, rowIndex, colIndex)
                         
     formatted_board = get_board(board)
     # create new game state
